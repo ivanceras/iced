@@ -6,6 +6,7 @@ use resvg::tiny_skia;
 use resvg::usvg;
 use rustc_hash::{FxHashMap, FxHashSet};
 use std::fs;
+use std::sync::Arc;
 
 /// Entry in cache corresponding to an svg handle
 pub enum Svg {
@@ -41,6 +42,8 @@ pub struct Cache {
 
 type ColorFilter = Option<[u8; 4]>;
 
+const IOSEVKA: &[u8] = include_bytes!("../../../assets/fonts/Iosevka-Regular.ttc");
+
 impl Cache {
     /// Load svg
     pub fn load(&mut self, handle: &svg::Handle) -> &Svg {
@@ -50,6 +53,13 @@ impl Cache {
 
         let mut opt = usvg::Options::default();
         opt.fontdb_mut().load_system_fonts();
+        opt.fontdb_mut().set_serif_family("Times New Roman");
+        opt.fontdb_mut().set_sans_serif_family("Arial");
+        opt.fontdb_mut().set_cursive_family("Comic Sans MS");
+        opt.fontdb_mut().set_fantasy_family("Impact");
+        opt.fontdb_mut().set_monospace_family("Iosevka");
+        let _ids = opt.fontdb_mut().load_font_source(usvg::fontdb::Source::Binary(Arc::new(IOSEVKA)));
+
         let svg = match handle.data() {
             svg::Data::Path(path) => fs::read_to_string(path)
                 .ok()
