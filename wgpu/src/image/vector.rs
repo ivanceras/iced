@@ -8,6 +8,8 @@ use rustc_hash::{FxHashMap, FxHashSet};
 use std::fs;
 use std::sync::Arc;
 
+const IOSEVKA: &[u8] = include_bytes!("../../../assets/fonts/Iosevka-Regular.ttc");
+
 /// Entry in cache corresponding to an svg handle
 pub enum Svg {
     /// Parsed svg
@@ -54,6 +56,8 @@ impl Cache {
         if self.fontdb.is_none() {
             let mut fontdb = usvg::fontdb::Database::new();
             fontdb.load_system_fonts();
+            let _ids = fontdb.load_font_source(usvg::fontdb::Source::Binary(Arc::new(IOSEVKA)));
+            fontdb.set_monospace_family("Iosevka");
 
             self.fontdb = Some(Arc::new(fontdb));
         }
