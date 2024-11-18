@@ -327,6 +327,12 @@ where
         Self::with_text("")
     }
 
+    /// return the size of this editor content
+    pub fn bounds(&self) -> Size {
+        let bounds = self.0.borrow().editor.bounds();
+        bounds
+    }
+
     /// Creates a [`Content`] with the given text.
     pub fn with_text(text: &str) -> Self {
         Self(RefCell::new(Internal {
