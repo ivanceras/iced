@@ -425,6 +425,10 @@ impl editor::Editor for Editor {
         self.internal().bounds
     }
 
+    fn scroll(&self) -> cosmic_text::Scroll {
+        self.buffer().scroll()
+    }
+
     fn min_bounds(&self) -> Size {
         let internal = self.internal();
 

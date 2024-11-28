@@ -54,7 +54,9 @@ use std::cell::RefCell;
 use std::fmt;
 use std::ops::DerefMut;
 use std::sync::Arc;
+use crate::graphics::text::cosmic_text;
 
+pub use cosmic_text::Scroll;
 pub use text::editor::{Action, Edit, Motion};
 
 /// A multi-line text input.
@@ -331,6 +333,11 @@ where
     pub fn bounds(&self) -> Size {
         let bounds = self.0.borrow().editor.bounds();
         bounds
+    }
+
+    /// return the scroll position of the text editor
+    pub fn scroll(&self) -> Scroll {
+        self.0.borrow().editor.scroll()
     }
 
     /// Creates a [`Content`] with the given text.
