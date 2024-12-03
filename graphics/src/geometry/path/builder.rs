@@ -56,7 +56,7 @@ impl Builder {
     ///
     /// See [the HTML5 specification of `arcTo`](https://html.spec.whatwg.org/multipage/canvas.html#building-paths:dom-context-2d-arcto)
     /// for more details and examples.
-    pub fn arc_to(&mut self, a: Point, b: Point, radius: f32) {
+    pub fn arc_to(&mut self, a: Point, b: Point, radius: f32, major: bool) {
         let start = self.raw.current_position();
         let mid = math::Point::new(a.x, a.y);
         let end = math::Point::new(b.x, b.y);
@@ -95,7 +95,7 @@ impl Builder {
             math::Vector::new(radius, radius),
             math::Angle::radians(0.0),
             lyon_path::ArcFlags {
-                large_arc: false,
+                large_arc: major,
                 sweep,
             },
             arc_end,
@@ -182,6 +182,7 @@ impl Builder {
             top_left.x + size.width - min_size.min(top_right_corner),
             top_left.y,
         ));
+        let major = false;
         self.arc_to(
             Point::new(top_left.x + size.width, top_left.y),
             Point::new(
@@ -189,6 +190,7 @@ impl Builder {
                 top_left.y + min_size.min(top_right_corner),
             ),
             min_size.min(top_right_corner),
+            major,
         );
         self.line_to(Point::new(
             top_left.x + size.width,
@@ -201,6 +203,7 @@ impl Builder {
                 top_left.y + size.height,
             ),
             min_size.min(bottom_right_corner),
+            major,
         );
         self.line_to(Point::new(
             top_left.x + min_size.min(bottom_left_corner),
@@ -213,6 +216,7 @@ impl Builder {
                 top_left.y + size.height - min_size.min(bottom_left_corner),
             ),
             min_size.min(bottom_left_corner),
+            major,
         );
         self.line_to(Point::new(
             top_left.x,
@@ -222,6 +226,7 @@ impl Builder {
             Point::new(top_left.x, top_left.y),
             Point::new(top_left.x + min_size.min(top_left_corner), top_left.y),
             min_size.min(top_left_corner),
+            major,
         );
         self.close();
     }
